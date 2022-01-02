@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+  api:
+    build: .
+    command: yarn start:dev
+    container_name: 'api'
+    networks:
+      - webnet
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '3000:3000'
+    links:
+      - database
+    depends_on:
+      - database
+  database:
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    container_name: database
+    networks:
+      - webnet
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DATABASE: condominium
+networks:
+  webnet:
